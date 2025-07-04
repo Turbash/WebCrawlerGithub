@@ -1,0 +1,26 @@
+rank,username,name,repo_description,avatar_url,profile_url,popular_repo,language,time_period,scraped_at
+1,emilk,Emil Ernerfeldt,egui: an easy-to-use immediate mode GUI in Rust that runs on both web and native,https://avatars.githubusercontent.com/u/1148717?s=96&v=4,https://github.com/emilk,egui,rust,weekly,2025-07-04T09:21:09.777208
+2,mizchi,Kotaro Chikuba,,https://avatars.githubusercontent.com/u/73962?s=96&v=4,https://github.com/mizchi,similarity,rust,weekly,2025-07-04T09:21:09.779969
+3,garyttierney,Gary Tierney,A framework for modding and instrumenting games.,https://avatars.githubusercontent.com/u/1180094?s=96&v=4,https://github.com/garyttierney,me3,rust,weekly,2025-07-04T09:21:09.780618
+4,,sigoden,"All-in-one LLM CLI tool featuring Shell Assistant, Chat-REPL, RAG, AI Tools & Agents, with access to OpenAI, Claude, Gemini, Ollama, Groq…",https://avatars.githubusercontent.com/u/4012553?s=96&v=4,https://github.com/sigoden,aichat,rust,weekly,2025-07-04T09:21:09.781201
+5,sxyazi,三咲雅 misaki masa,"💥 Blazing fast terminal file manager written in Rust, based on async I/O.",https://avatars.githubusercontent.com/u/17523360?s=96&v=4,https://github.com/sxyazi,yazi,rust,weekly,2025-07-04T09:21:09.781779
+6,febo,Fernando Otero,A simple benchmark of SVM entrypoints.,https://avatars.githubusercontent.com/u/729235?s=96&v=4,https://github.com/febo,eisodos,rust,weekly,2025-07-04T09:21:09.782337
+7,ClementTsang,Clement Tsang,Yet another cross-platform graphical process/system monitor.,https://avatars.githubusercontent.com/u/34804052?s=96&v=4,https://github.com/ClementTsang,bottom,rust,weekly,2025-07-04T09:21:09.782904
+8,,kixelated,Rust library for Media over QUIC,https://avatars.githubusercontent.com/u/432854?s=96&v=4,https://github.com/kixelated,moq,rust,weekly,2025-07-04T09:21:09.783471
+9,steveklabnik,Steve Klabnik,A programming language that is a minimal subset of Rust,https://avatars.githubusercontent.com/u/27786?s=96&v=4,https://github.com/steveklabnik,rue,rust,weekly,2025-07-04T09:21:09.784038
+10,sd2k,Ben Sully,Tokio Console Datasource for Grafana,https://avatars.githubusercontent.com/u/5464991?s=96&v=4,https://github.com/sd2k,grafana-tokio-console-datasource,rust,weekly,2025-07-04T09:21:09.784604
+11,romanz,Roman Zeyde,An efficient re-implementation of Electrum Server in Rust,https://avatars.githubusercontent.com/u/9900?s=96&v=4,https://github.com/romanz,electrs,rust,weekly,2025-07-04T09:21:09.785153
+12,Keats,Vincent Prouillet,A template engine for Rust based on Jinja2/Django,https://avatars.githubusercontent.com/u/680355?s=96&v=4,https://github.com/Keats,tera,rust,weekly,2025-07-04T09:21:09.785713
+13,Schniz,Gal Schlezinger,"🚀 Fast and simple Node.js version manager, built in Rust",https://avatars.githubusercontent.com/u/2054772?s=96&v=4,https://github.com/Schniz,fnm,rust,weekly,2025-07-04T09:21:09.786261
+14,XiangpengHao,Xiangpeng Hao,Distributed pushdown cache for DataFusion,https://avatars.githubusercontent.com/u/6504314?s=96&v=4,https://github.com/XiangpengHao,liquid-cache,rust,weekly,2025-07-04T09:21:09.786828
+15,serprex,Philip Dubé,,https://avatars.githubusercontent.com/u/159546?s=96&v=4,https://github.com/serprex,openEtG,rust,weekly,2025-07-04T09:21:09.787363
+16,bombsimon,Simon Sawert,"A list of Garmin application, both for Garmin devices and other tools",https://avatars.githubusercontent.com/u/3248948?s=96&v=4,https://github.com/bombsimon,awesome-garmin,rust,weekly,2025-07-04T09:21:09.787931
+17,YangKeao,YangKeao,A quantile regression library in rust,https://avatars.githubusercontent.com/u/5244316?s=96&v=4,https://github.com/YangKeao,langbardo,rust,weekly,2025-07-04T09:21:09.788481
+18,LaurenzV,Laurenz Stampfl,"An experimental, work-in-progress PDF rasterizer in pure Rust.",https://avatars.githubusercontent.com/u/47084093?s=96&v=4,https://github.com/LaurenzV,hayro,rust,weekly,2025-07-04T09:21:09.789038
+19,yuja,Yuya Nishihara,QML -> QtWidgets UI/C++ transpiler,https://avatars.githubusercontent.com/u/172069?s=96&v=4,https://github.com/yuja,qmluic,rust,weekly,2025-07-04T09:21:09.789600
+20,Frando,Franz Heinzmann,Easily use FAUST DSPs in Rust,https://avatars.githubusercontent.com/u/43627?s=96&v=4,https://github.com/Frando,rust-faust,rust,weekly,2025-07-04T09:21:09.790140
+21,benluelo,ben,,https://avatars.githubusercontent.com/u/57334811?s=96&v=4,https://github.com/benluelo,advent-of-code,rust,weekly,2025-07-04T09:21:09.790693
+22,Narsil,Nicolas Patry,"Simple library to listen and send events to keyboard and mouse (MacOS, Windows, Linux)",https://avatars.githubusercontent.com/u/204321?s=96&v=4,https://github.com/Narsil,rdev,rust,weekly,2025-07-04T09:21:09.791244
+23,aome510,Thang Pham,A Spotify player in the terminal with full feature parity,https://avatars.githubusercontent.com/u/40011582?s=96&v=4,https://github.com/aome510,spotify-player,rust,weekly,2025-07-04T09:21:09.791810
+24,,phiresky,"rga: ripgrep, but also search in PDFs, E-Books, Office documents, zip, tar.gz, etc.",https://avatars.githubusercontent.com/u/2303841?s=96&v=4,https://github.com/phiresky,ripgrep-all,rust,weekly,2025-07-04T09:21:09.792373
+25,JP-Ellis,JP-Ellis,Skiplist implementation in rust,https://avatars.githubusercontent.com/u/3196162?s=96&v=4,https://github.com/JP-Ellis,rust-skiplist,rust,weekly,2025-07-04T09:21:09.792931

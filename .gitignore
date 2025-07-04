@@ -70,10 +70,6 @@ venv.bak/
 # pyenv
 .python-version
 
-# Data files (optional - remove if you want to track data)
-data/csv/*.csv
-data/json/*.json
-data/logs/*.log
 
 # OS generated files
 .DS_Store
