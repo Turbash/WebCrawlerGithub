@@ -1,7 +1,7 @@
-#!/usr/bin/env python3
 """
 GitHub Trending Developers Web Crawler
 Scrapes trending developers from GitHub and saves to CSV and JSON
+Supports multiple languages and time periods
 """
 
 import requests
@@ -10,24 +10,39 @@ import csv
 import json
 from datetime import datetime
 import os
+import time
 from rich.console import Console
-from rich.progress import track
+from rich.progress import track, Progress, TaskID
 from rich.panel import Panel
 from rich.table import Table
 
-GITHUB_URL = "https://github.com/trending/developers"
+GITHUB_BASE_URL = "https://github.com/trending/developers"
 USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
 OUTPUT_DIR = "data"
+CSV_DIR = os.path.join(OUTPUT_DIR, "csv")
+JSON_DIR = os.path.join(OUTPUT_DIR, "json")
+
+LANGUAGES = ["python", "javascript", "typescript", "java", "rust", "go", "c++"]
+
+TIME_PERIODS = ["daily", "weekly", "monthly"]
 
 def setup_directories():
-    os.makedirs(OUTPUT_DIR, exist_ok=True)
+    """Create necessary directories for storing CSV and JSON files"""
+    os.makedirs(CSV_DIR, exist_ok=True)
+    os.makedirs(JSON_DIR, exist_ok=True)
 
 def get_timestamp():
     return datetime.now().strftime("%Y%m%d_%H%M%S")
 
-def scrape_trending_developers():
-    console = Console()
-    console.print(Panel("🚀 GitHub Trending Developers Scraper", style="bold blue"))
+def build_url(language=None, since="daily"):
+    """Build GitHub trending developers URL with language and time period"""
+    if language:
+        return f"{GITHUB_BASE_URL}/{language}?since={since}"
+    return f"{GITHUB_BASE_URL}?since={since}"
+
+def scrape_trending_developers(language=None, since="daily"):
+    """Scrape trending developers for a specific language and time period"""
+    url = build_url(language, since)
     
     headers = {
         'User-Agent': USER_AGENT,
@@ -35,19 +50,21 @@ def scrape_trending_developers():
     }
     
     try:
-        console.print("📡 Fetching GitHub trending page...")
-        response = requests.get(GITHUB_URL, headers=headers, timeout=30)
+        response = requests.get(url, headers=headers, timeout=30)
         response.raise_for_status()
         
         soup = BeautifulSoup(response.text, 'html.parser')
         developers = []
         
         developer_elements = soup.find_all('article', class_='Box-row')
-        console.print(f"🔍 Found {len(developer_elements)} developers to parse")
         
-        for i, element in enumerate(track(developer_elements, description="Parsing developers...")):
+        for i, element in enumerate(developer_elements):
             try:
-                developer = {'rank': i + 1}
+                developer = {
+                    'rank': i + 1,
+                    'language': language or 'all',
+                    'time_period': since
+                }
                 
                 name_link = element.find('h1', class_='h3')
                 if name_link:
@@ -95,23 +112,20 @@ def scrape_trending_developers():
                     developers.append(developer)
                     
             except Exception as e:
-                console.print(f"⚠️  Error parsing developer {i+1}: {e}", style="yellow")
                 continue
         
         return developers
         
     except requests.RequestException as e:
-        console.print(f"❌ Error fetching data: {e}", style="red")
         return []
     except Exception as e:
-        console.print(f"❌ Unexpected error: {e}", style="red")
         return []
 
 def save_to_csv(developers, filename):
     if not developers:
         return False
     
-    fieldnames = ['rank', 'username', 'name', 'repo_description', 'avatar_url', 'profile_url', 'popular_repo', 'scraped_at']
+    fieldnames = ['rank', 'username', 'name', 'repo_description', 'avatar_url', 'profile_url', 'popular_repo', 'language', 'time_period', 'scraped_at']
     
     try:
         with open(filename, 'w', newline='', encoding='utf-8') as csvfile:
@@ -123,12 +137,14 @@ def save_to_csv(developers, filename):
         print(f"Error saving CSV: {e}")
         return False
 
-def save_to_json(developers, filename):
+def save_to_json(developers, filename, language=None, since="daily"):
     if not developers:
         return False
     
     data = {
         'scraped_at': datetime.now().isoformat(),
+        'language': language or 'all',
+        'time_period': since,
         'total_developers': len(developers),
         'developers': developers
     }
@@ -152,16 +168,18 @@ def display_results(developers):
     table.add_column("Rank", style="dim", width=6)
     table.add_column("Username", style="cyan", width=20)
     table.add_column("Name", style="green", width=25)
+    table.add_column("Language", style="yellow", width=12)
+    table.add_column("Period", style="blue", width=10)
     table.add_column("Popular Repo", style="yellow", width=25)
-    table.add_column("Repo Desc", style="blue", width=30)
     
     for dev in developers[:10]:
         table.add_row(
             str(dev['rank']),
             dev['username'][:18] + "..." if len(dev['username']) > 18 else dev['username'],
             dev['name'][:23] + "..." if len(dev['name']) > 23 else dev['name'],
-            dev['popular_repo'][:23] + "..." if len(dev['popular_repo']) > 23 else dev['popular_repo'],
-            dev['repo_description'][:28] + "..." if len(dev['repo_description']) > 28 else dev['repo_description']
+            dev.get('language', 'all')[:10],
+            dev.get('time_period', 'daily')[:8],
+            dev['popular_repo'][:23] + "..." if len(dev['popular_repo']) > 23 else dev['popular_repo']
         )
     
     console.print(table)
@@ -169,38 +187,76 @@ def display_results(developers):
     if len(developers) > 10:
         console.print(f"\n... and {len(developers) - 10} more developers", style="dim")
 
+def scrape_all_combinations():
+    """Scrape all language and time period combinations"""
+    console = Console()
+    console.print(Panel("🚀 GitHub Trending Developers Multi-Language Scraper", style="bold blue"))
+    
+    all_results = []
+    total_combinations = len(LANGUAGES) * len(TIME_PERIODS)
+    completed = 0
+    
+    for language in LANGUAGES:
+        for since in TIME_PERIODS:
+            completed += 1
+            console.print(f"\n[{completed}/{total_combinations}] Scraping {language} - {since}...")
+            
+            developers = scrape_trending_developers(language, since)
+            
+            if developers:
+                timestamp = get_timestamp()
+                
+                csv_filename = os.path.join(CSV_DIR, f"github_trending_{language}_{since}_{timestamp}.csv")
+                json_filename = os.path.join(JSON_DIR, f"github_trending_{language}_{since}_{timestamp}.json")
+                
+                csv_saved = save_to_csv(developers, csv_filename)
+                json_saved = save_to_json(developers, json_filename, language, since)
+                
+                if csv_saved and json_saved:
+                    console.print(f"✅ Saved {len(developers)} developers for {language} - {since}")
+                    all_results.extend(developers)
+                else:
+                    console.print(f"⚠️  Failed to save some files for {language} - {since}", style="yellow")
+            else:
+                console.print(f"❌ No data found for {language} - {since}", style="red")
+            
+            time.sleep(1)
+    
+    return all_results
+
 def main():
     console = Console()
     
     try:
         setup_directories()
-        developers = scrape_trending_developers()
+        all_developers = scrape_all_combinations()
         
-        if not developers:
-            console.print("❌ No data scraped", style="red")
+        if not all_developers:
+            console.print("❌ No data scraped from any combination", style="red")
             return
         
-        timestamp = get_timestamp()
-        csv_filename = os.path.join(OUTPUT_DIR, f"github_trending_developers_{timestamp}.csv")
-        json_filename = os.path.join(OUTPUT_DIR, f"github_trending_developers_{timestamp}.json")
+        console.print("\n" + "="*80)
+        display_results(all_developers)
         
-        console.print("\n💾 Saving data...")
+        console.print(f"\n✅ Successfully scraped {len(all_developers)} total developers across all combinations!", style="bold green")
+        console.print(f"📁 CSV files saved in: {CSV_DIR}", style="green")
+        console.print(f"📁 JSON files saved in: {JSON_DIR}", style="green")
         
-        csv_saved = save_to_csv(developers, csv_filename)
-        json_saved = save_to_json(developers, json_filename)
+        console.print("\n📊 Summary by combination:", style="bold")
+        summary_table = Table(show_header=True, header_style="bold cyan")
+        summary_table.add_column("Language")
+        summary_table.add_column("Period")
+        summary_table.add_column("Developers")
         
-        console.print("\n" + "="*60)
-        display_results(developers)
+        summary = {}
+        for dev in all_developers:
+            key = (dev.get('language', 'all'), dev.get('time_period', 'daily'))
+            summary[key] = summary.get(key, 0) + 1
         
-        console.print(f"\n✅ Successfully scraped {len(developers)} developers!", style="bold green")
+        for (lang, period), count in sorted(summary.items()):
+            summary_table.add_row(lang, period, str(count))
         
-        if csv_saved:
-            console.print(f"📄 CSV saved: {csv_filename}", style="green")
-        if json_saved:
-            console.print(f"📄 JSON saved: {json_filename}", style="green")
-            
-        if not csv_saved or not json_saved:
-            console.print("⚠️  Some files failed to save", style="yellow")
+        console.print(summary_table)
         
     except KeyboardInterrupt:
         console.print("\n⚠️  Scraping interrupted by user", style="yellow")
